@@ -42,4 +42,5 @@ private:
 	Vector3 velocity_;
 	//デスフラグ
 	bool isDead_ = false;
+	
 };

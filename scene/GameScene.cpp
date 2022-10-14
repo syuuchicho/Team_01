@@ -14,7 +14,9 @@ GameScene::~GameScene() {
 	delete player_; //自キャラの解放
 	//delete enemy_;
 }
-
+float i = 1;
+float x = 1;
+int time = 60;
 void GameScene::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
@@ -46,18 +48,21 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 
+	
 	//デスグラフが立った敵を削除
 	enemies_.remove_if([](std::unique_ptr<Enemy>& enemy) {
 		return enemy->IsDead();
 		});
 	//自キャラの更新
 	player_->Update();
-
-	if (input_->TriggerKey(DIK_A))
+	time--;
+	if (time<=0)
 	{
+		time = 60;
+		i += 1;
 		//敵の生成,初期化
 		std::unique_ptr<Enemy>newEnemy = std::make_unique<Enemy>();
-		newEnemy->Initialize(model_, { 0,10,0 });
+		newEnemy->Initialize(model_, { i*x,10,0 });
 		//敵を登録する
 		enemies_.push_back(std::move(newEnemy));
 	}

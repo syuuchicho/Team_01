@@ -8,7 +8,8 @@ void Enemy::Initialize(Model* model, const Vector3& position) {
 	assert(model);
 
 	model_ = model;
-
+	
+	
 	//テクスチャ読み込み
 	textureHandle_ = TextureManager::Load("EnemyP.png");
 
@@ -16,7 +17,7 @@ void Enemy::Initialize(Model* model, const Vector3& position) {
 	worldTransform_.Initialize();
 
 	//キャラクターの移動ベクトル
-	Vector3 move = { 0,20,0 }; //座標{x,y,z}
+	Vector3 move = { 0,10,0 }; //座標{x,y,z}
 
 	//初期座標をセット
 	worldTransform_.translation_ = position;
