@@ -3,7 +3,7 @@
 
 MatWorld* bulletMatworld = nullptr;
 
-void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity)
+void PlayerBullet::Initialize(Model* model, const Vector3& position)
 {
 	//NULLポインタチェック
 	assert(model);
@@ -12,14 +12,13 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vecto
 	//テクスチャ読み込み
 	textureHandle_ = TextureManager::Load("tama.jpg");
 
-	// 引数で受け取った速度をメンバ変数に代入
-	velocity_ = velocity;
-
 	//ワールド変換の初期化
 	worldTransform_.Initialize();
 
 	//引数で受け取った初期座標をセット
 	worldTransform_.translation_ = position;
+
+	debugText_ = DebugText::GetInstance();
 
 }
 
@@ -36,22 +35,31 @@ Vector3 PlayerBullet::GetWorldPosition()
 	return worldPos;
 }
 
-void PlayerBullet::Update()
+void PlayerBullet::Update(Vector3& velocity, bool& shootFlag, bool& changeFlag)
 {
+	// 引数で受け取った速度をメンバ変数に代入
+	velocity_ = velocity;
+
 	// 座標を移動させる(1フレーム分の移動量を足しこむ)
 	worldTransform_.translation_ += velocity_;
+
+	//y座標が21超えたら消える
+	if (worldTransform_.translation_.y > 21)
+	{
+		isDead_ = true;
+		shootFlag = 0;
+		changeFlag = 0;
+	}
 
 	//行列の計算
 	worldTransform_.matWorld_ = bulletMatworld->CreateMatWorld(worldTransform_);
 	//行列の転送
 	worldTransform_.TransferMatrix();
 
-	//時間経過でデス
-	if (--deathTimer_ <= 0)
-	{
-		isDead_ = true;
-	}
-
+	//デバックテキスト
+	debugText_->SetPos(80, 160);
+	debugText_->Printf(
+		"bullet(Y:%f)", worldTransform_.translation_.y);
 }
 
 //衝突判定
@@ -59,7 +67,6 @@ void PlayerBullet::OnCollision()
 {
 	isDead_ = true;
 }
-
 
 void PlayerBullet::Draw(const ViewProjection& viewProjection)
 {

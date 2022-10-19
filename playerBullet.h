@@ -3,13 +3,14 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #include "matWorld.h"
+#include "DebugText.h"
 
 class PlayerBullet {
 public:
 
-	void Initialize(Model* model, const Vector3& position, const Vector3& velocity);
+	void Initialize(Model* model, const Vector3& position);
 
-	void Update();
+	void Update(Vector3& velocity, bool& shootFlag, bool& changeFlag);
 
 	void Draw(const ViewProjection& viewProjection);
 
@@ -18,6 +19,8 @@ public:
 
 	// ワールド座標を取得
 	Vector3 GetWorldPosition();
+
+	bool IsDead() const { return isDead_; }
 
 private:
 
@@ -30,14 +33,11 @@ private:
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 
+	//デバックテキスト
+	DebugText* debugText_ = nullptr;
+
 	// 速度
 	Vector3 velocity_;
-
-	//寿命
-	static const int32_t kLifeTime = 60 * 5;
-
-	//デスタイマー
-	int32_t deathTimer_ = kLifeTime;
 
 	//デスフラグ
 	bool isDead_ = false;
