@@ -11,17 +11,18 @@
 #include "WorldTransform.h"
 #include "Player.h"
 #include "Enemy.h"
-#include"Skydome.h"
+#include "Skydome.h"
+#include "WinApp.h"
 
 /// <summary>
 /// ゲームシーン
 /// </summary>
 class GameScene {
 
-  public: // メンバ関数
-	/// <summary>
-	/// コンストクラタ
-	/// </summary>
+public: // メンバ関数
+  /// <summary>
+  /// コンストクラタ
+  /// </summary>
 	GameScene();
 
 	/// <summary>
@@ -50,7 +51,7 @@ class GameScene {
 	void CheakAllCollisions();
 
 
-  private: // メンバ変数
+private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
@@ -59,7 +60,7 @@ class GameScene {
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
-	
+
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0;
 
@@ -78,6 +79,21 @@ class GameScene {
 	std::list<std::unique_ptr<Enemy>>enemies_;
 	//天球
 	Skydome* skydome_ = nullptr;
+	//画面
+	WinApp* winApp_ = nullptr;
 
-	
+	float i = 1;
+	float x = 1;
+
+	int time = 70;
+	int time2 = -1;
+	int time3 = 60;
+	int time4 = -1;
+	int time5 = -1;
+
+	int enemyNum = 0;
+	//死んだ敵の数
+	int deadEnemyNum = 0;
+	int left = 0;
+	int Wave = 1;
 };

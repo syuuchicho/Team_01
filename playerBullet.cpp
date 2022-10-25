@@ -51,6 +51,22 @@ void PlayerBullet::Update(Vector3& velocity, bool& shootFlag, bool& changeFlag)
 		changeFlag = 0;
 	}
 
+	//x座標が-37超えたら消える
+	if (worldTransform_.translation_.x < -37)
+	{
+		isDead_ = true;
+		shootFlag = 0;
+		changeFlag = 0;
+	}
+
+	//x座標が37超えたら消える
+	if (worldTransform_.translation_.x > 37)
+	{
+		isDead_ = true;
+		shootFlag = 0;
+		changeFlag = 0;
+	}
+
 	//行列の計算
 	worldTransform_.matWorld_ = bulletMatworld->CreateMatWorld(worldTransform_);
 	//行列の転送
