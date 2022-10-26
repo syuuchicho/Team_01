@@ -30,7 +30,7 @@ void GameScene::Initialize() {
 	//自キャラの生成
 	player_ = new Player();
 	//自キャラの初期化
-	player_->Initialize(model_, Vector3{ -10,-10,0 });
+	player_->Initialize(model_);
 
 	//天球の生成
 	skydome_ = new Skydome();
@@ -76,7 +76,7 @@ void GameScene::Update() {
 			time = 70;
 			time2 = -1;
 			time3 = 60;
-			time4 = 60;
+			time4 = 90;
 			enemyNum = 0;
 			//死んだ敵の数
 			deadEnemyNum = 0;
@@ -84,9 +84,8 @@ void GameScene::Update() {
 			Wave = 1;
 			//残機
 			hp = 3;
-			scene = 1;		//リトライ
-			player_->ResetFlag();
-			scene = 0;		//タイトル
+			player_->ResetBullet();
+			scene = 0;		//リトライ
 		}
 	default://ゲームオーバー
 		if (input_->TriggerKey(DIK_SPACE))
@@ -98,7 +97,7 @@ void GameScene::Update() {
 			time = 70;
 			time2 = -1;
 			time3 = 60;
-			time4 = 60;
+			time4 = 90;
 			enemyNum = 0;
 			//死んだ敵の数
 			deadEnemyNum = 0;
@@ -212,7 +211,7 @@ void GameScene::Update() {
 			//敵の生成,初期化
 			std::unique_ptr<Enemy>newEnemy = std::make_unique<Enemy>();
 			newEnemy->Initialize(model_, { 0,21,0 });
-			time4 = 60;
+			time4 = 90;
 			enemyNum += 1;
 
 			//敵を登録する
