@@ -18,7 +18,7 @@ public:
 	/// </summary>
 	/// <pragma name="model">モデル</param>
 	/// <pragma name="textureHandle">テクスチャハンドル</param>
-	void Initialize(Model* model, const Vector3& position);
+	void Initialize(Model* model);
 
 	///<summary>
 	///更新
@@ -51,8 +51,13 @@ public:
 private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
+	WorldTransform hp;
+	WorldTransform hp2;
+	WorldTransform hp3;
+
 	// モデル
 	Model* model_ = nullptr;
+	Model* modelPlayerBullet_ = nullptr;
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 	// 入力処理するため

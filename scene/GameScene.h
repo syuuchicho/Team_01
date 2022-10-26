@@ -66,7 +66,9 @@ private: // メンバ変数
 
 	//3Dモデル
 	Model* model_ = nullptr;
-	Model* modelSkydome_ = nullptr;
+	Model* modelSkydome_ = nullptr; //ゲーム背景モデル
+	Model* modelPlayer_ = nullptr; //プレイヤーモデル
+	Model* modelEnemy_ = nullptr; //敵モデル
 
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_;
@@ -87,7 +89,7 @@ private: // メンバ変数
 	int time = 70;
 	int time2 = -1;
 	int time3 = 60;
-	int time4 = 60;
+	int time4 = 90;
 
 	int enemyNum = 0;
 	//死んだ敵の数

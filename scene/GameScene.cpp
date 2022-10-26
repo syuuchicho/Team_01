@@ -29,8 +29,10 @@ void GameScene::Initialize() {
 
 	//自キャラの生成
 	player_ = new Player();
+	//自キャラモデルの生成
+	modelPlayer_ = Model::CreateFromOBJ("player", true);
 	//自キャラの初期化
-	player_->Initialize(model_);
+	player_->Initialize(modelPlayer_);
 
 	//天球の生成
 	skydome_ = new Skydome();
@@ -38,6 +40,9 @@ void GameScene::Initialize() {
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	//天球の初期化
 	skydome_->Initialize(modelSkydome_);
+
+	//敵キャラモデルの生成
+	modelEnemy_ = Model::CreateFromOBJ("bat_TD2", true);
 
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
@@ -69,6 +74,7 @@ void GameScene::Update() {
 	case 2:		//ゲームクリア
 		if (input_->TriggerKey(DIK_SPACE))
 		{
+
 			for (std::unique_ptr<Enemy>& enemy : enemies_)
 			{
 				enemy->OnCollision(deadEnemyNum);
@@ -85,8 +91,9 @@ void GameScene::Update() {
 			//残機
 			hp = 3;
 			player_->ResetBullet();
-			scene = 0;		//リトライ
+			scene = 0;		//タイトル
 		}
+		break;
 	default://ゲームオーバー
 		if (input_->TriggerKey(DIK_SPACE))
 		{
@@ -153,7 +160,7 @@ void GameScene::Update() {
 			time = 10;
 			//敵の生成,初期化
 			std::unique_ptr<Enemy>newEnemy = std::make_unique<Enemy>();
-			newEnemy->Initialize(model_, { 0,21,0 });
+			newEnemy->Initialize(modelEnemy_, { 0,21,0 });
 			enemyNum = 1;
 			//敵を登録する
 			enemies_.push_back(std::move(newEnemy));
@@ -165,14 +172,14 @@ void GameScene::Update() {
 			std::unique_ptr<Enemy>newEnemy = std::make_unique<Enemy>();
 			if (left % 2 == 0)
 			{
-				newEnemy->Initialize(model_, { -10,21,0 });
+				newEnemy->Initialize(modelEnemy_, { -10,21,0 });
 				left = 1;
 				time2 = 1;
 				enemyNum += 1;
 			}
 			else if (left % 2 == 1)
 			{
-				newEnemy->Initialize(model_, { 10,21,0 });
+				newEnemy->Initialize(modelEnemy_, { 10,21,0 });
 				left = 0;
 				time2 = 60;
 				enemyNum += 1;
@@ -189,14 +196,14 @@ void GameScene::Update() {
 			std::unique_ptr<Enemy>newEnemy = std::make_unique<Enemy>();
 			if (left % 2 == 0)
 			{
-				newEnemy->Initialize(model_, { -10,21,0 });
+				newEnemy->Initialize(modelEnemy_, { -10,21,0 });
 				left = 1;
 				time3 = 1;
 				enemyNum += 1;
 			}
 			else if (left % 2 == 1)
 			{
-				newEnemy->Initialize(model_, { 10,21,0 });
+				newEnemy->Initialize(modelEnemy_, { 10,21,0 });
 				left = 0;
 				time3 = 120;
 				enemyNum += 1;
@@ -210,7 +217,7 @@ void GameScene::Update() {
 		{
 			//敵の生成,初期化
 			std::unique_ptr<Enemy>newEnemy = std::make_unique<Enemy>();
-			newEnemy->Initialize(model_, { 0,21,0 });
+			newEnemy->Initialize(modelEnemy_, { 0,21,0 });
 			time4 = 90;
 			enemyNum += 1;
 
@@ -297,10 +304,6 @@ void GameScene::Draw() {
 
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
-	if (scene == 1)
-	{
-
-
 #pragma region 背景スプライト描画
 		// 背景スプライト描画前処理
 		Sprite::PreDraw(commandList);
@@ -318,6 +321,8 @@ void GameScene::Draw() {
 #pragma region 3Dオブジェクト描画
 		// 3Dオブジェクト描画前処理
 		Model::PreDraw(commandList);
+	if (scene == 1)
+	{
 
 		/// <summary>
 		/// ここに3Dオブジェクトの描画処理を追加できる
@@ -335,6 +340,7 @@ void GameScene::Draw() {
 		}
 
 		// 3Dオブジェクト描画後処理
+	}
 		Model::PostDraw();
 #pragma endregion
 
@@ -367,6 +373,5 @@ void GameScene::Draw() {
 
 		// スプライト描画後処理
 		Sprite::PostDraw();
-	}
 #pragma endregion
 }

@@ -4,13 +4,15 @@
 MatWorld* playerMatworld = nullptr;
 
 //初期化処理
-void Player::Initialize(Model* model, const Vector3& position)
+void Player::Initialize(Model* model)
 {
 	// NULLポインタチェック
 	assert(model);
 
 	// 引数として受け取ったデータをメンバ変数に記録する
 	model_ = model;
+	//自キャラの弾モデルの生成
+	modelPlayerBullet_ = Model::CreateFromOBJ("bullet", true);
 	// シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
 	debugText_ = DebugText::GetInstance();
@@ -20,9 +22,16 @@ void Player::Initialize(Model* model, const Vector3& position)
 
 	//キャラクターの移動ベクトル
 	Vector3 move = { 0,-15,0 };//座標{x,y,z}
+	Vector3 position = { 0,20,0 };
+	Vector3 position2 = { 20,20,0 };
+	Vector3 position3 = { 40,20,0 };
 
 	//初期座標をセット
 	worldTransform_.translation_ = move;
+	hp.translation_ = position;
+	hp2.translation_ = position2;
+ 	hp3.translation_ = position3;
+
 }
 
 //ワールド座標を入れる変数
@@ -80,7 +89,7 @@ void Player::Attack()
 		{
 			//弾を生成し、初期化
 			std::unique_ptr<PlayerBullet>newBullet = std::make_unique<PlayerBullet>();
-			newBullet->Initialize(model_, worldTransform_.translation_); //自キャラの座標
+			newBullet->Initialize(modelPlayerBullet_, worldTransform_.translation_); //自キャラの座標
 
 			//弾を登録する
 			bullets_.push_back(std::move(newBullet));
@@ -138,7 +147,10 @@ void Player::Update()
 //描画処理
 void Player::Draw(ViewProjection& viewProjection)
 {
-	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+	model_->Draw(worldTransform_, viewProjection);
+	/*model_->Draw(hp, viewProjection, textureHandle_);
+	model_->Draw(hp2, viewProjection, textureHandle_);
+	model_->Draw(hp3, viewProjection, textureHandle_);*/
 	// 弾の描画
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets_)
 	{

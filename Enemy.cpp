@@ -155,7 +155,7 @@ void Enemy::UpdateW1()
 void Enemy::UpdateW2(int& left)
 {
 	//速度を初期化
-	float speedY = -0.05f;
+	float speedY = -0.045f;
 	float speedX = 0.05f;
 	//移動パターン
 	switch (phase_) {
@@ -223,6 +223,6 @@ void Enemy::Draw(ViewProjection& viewProjection)
 	//if (flag == 0)
 	//{
 		//モデルの描画
-	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+	model_->Draw(worldTransform_, viewProjection);
 	//}
 }
