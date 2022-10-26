@@ -13,6 +13,9 @@
 #include "Enemy.h"
 #include "Skydome.h"
 #include "WinApp.h"
+#include "Hp.h"
+
+
 
 /// <summary>
 /// ゲームシーン
@@ -68,6 +71,7 @@ private: // メンバ変数
 	Model* model_ = nullptr;
 	Model* modelSkydome_ = nullptr; //ゲーム背景モデル
 	Model* modelPlayer_ = nullptr; //プレイヤーモデル
+	Model* modelHp_ = nullptr;	//残機モデル
 	Model* modelEnemy_ = nullptr; //敵モデル
 
 	//ワールドトランスフォーム
@@ -83,6 +87,10 @@ private: // メンバ変数
 	Skydome* skydome_ = nullptr;
 	//画面
 	WinApp* winApp_ = nullptr;
+	//残機描画
+	Hp* hp_ = nullptr;
+	Hp* hp_2 = nullptr;
+	Hp* hp_3 = nullptr;
 
 	int scene = 0;
 

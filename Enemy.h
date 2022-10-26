@@ -34,7 +34,7 @@ public:
 	void UpdateW3();
 
 	//接近
-	void Approach(float& appSpeed, float goal);
+	void Approach(float& appSpeed);
 
 	//左移動
 	void MoveLeft(float& appSpeed);
@@ -96,6 +96,5 @@ private:
 	bool changeFlagR = 0;
 	//デスフラグ
 	bool isDead_ = false;
-	//目的地
-	float goal = 0;
+	
 };

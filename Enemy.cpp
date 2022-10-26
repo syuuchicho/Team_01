@@ -4,7 +4,7 @@
 MatWorld* enemyMatworld = nullptr;
 
 //接近フェーズ
-void Enemy::Approach(float& appSpeed, float goal)
+void Enemy::Approach(float& appSpeed)
 {
 	//道のり
 	m += -appSpeed;
@@ -160,7 +160,7 @@ void Enemy::UpdateW2(int& left)
 	//移動パターン
 	switch (phase_) {
 	case Phase::Approach://接近
-		Approach(speedY, 15);//15 = 画面端
+		Approach(speedY);//15 = 画面端
 		break;
 	case Phase::MoveLeft://左移動
 		MoveLeft(speedX);

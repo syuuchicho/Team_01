@@ -98,6 +98,7 @@
     <ClCompile Include="base\TextureManager.cpp" />
     <ClCompile Include="base\WinApp.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="Hp.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="matWorld.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -127,6 +128,9 @@
     <ClInclude Include="base\TextureManager.h" />
     <ClInclude Include="base\WinApp.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="Hp.h" />
+    <ClInclude Include="Hp2.h" />
+    <ClInclude Include="Hp3.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="math\MathUtility.h" />
     <ClInclude Include="math\Matrix4.h" />

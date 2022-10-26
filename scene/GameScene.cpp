@@ -33,6 +33,18 @@ void GameScene::Initialize() {
 	modelPlayer_ = Model::CreateFromOBJ("player", true);
 	//自キャラの初期化
 	player_->Initialize(modelPlayer_);
+	
+	//残機の生成
+	modelHp_= Model::CreateFromOBJ("player", true);
+	//残機描画を初期化
+	hp_ = new Hp();
+	hp_->Initialize(modelHp_, { -33,16,0 });
+	hp_2 = new Hp();
+	hp_2->Initialize(modelHp_, { -28,16,0 });
+	hp_3 = new Hp();
+	hp_3->Initialize(modelHp_, { -23,16,0 });
+
+	//残機モデルの初期化
 
 	//天球の生成
 	skydome_ = new Skydome();
@@ -125,6 +137,11 @@ void GameScene::Update() {
 		enemies_.remove_if([](std::unique_ptr<Enemy>& enemy) {
 			return enemy->IsDead();
 			});
+		//自機の更新
+		hp_->Update();
+		hp_2->Update();
+		hp_3->Update();
+
 #pragma region Wave管理
 		if (deadEnemyNum == 3)
 		{
@@ -337,6 +354,20 @@ void GameScene::Draw() {
 		for (std::unique_ptr<Enemy>& enemy : enemies_)
 		{
 			enemy->Draw(viewProjection_);
+		}
+
+		//残機の描画
+		if (hp>=1)
+		{
+			hp_->Draw(viewProjection_);
+		}
+		if (hp>=2)
+		{
+			hp_2->Draw(viewProjection_);
+		}
+		if (hp>=3)
+		{
+			hp_3->Draw(viewProjection_);
 		}
 
 		// 3Dオブジェクト描画後処理
