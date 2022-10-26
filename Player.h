@@ -47,6 +47,7 @@ public:
 
 	void ResetFlag();
 
+	void ResetBullet();
 private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;

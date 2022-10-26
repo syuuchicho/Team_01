@@ -86,7 +86,6 @@ void GameScene::Update() {
 			hp = 3;
 			scene = 1;		//リトライ
 			player_->ResetFlag();
-
 			scene = 0;		//タイトル
 		}
 	default://ゲームオーバー
@@ -108,13 +107,12 @@ void GameScene::Update() {
 			//残機
 			hp = 3;
 			scene = 1;		//リトライ
-			player_->ResetFlag();
+			player_->ResetBullet();
 		}
 		break;
 	}
 	if (scene == 1)
 	{
-
 		//自キャラの更新 
 		player_->Update();
 		//デスグラフが立った敵を削除
@@ -234,7 +232,7 @@ void GameScene::Update() {
 				enemy->UpdateW2(left);
 				break;
 			case 3:
-				enemy->UpdateW1();
+				enemy->UpdateW3();
 				break;
 			}
 		}

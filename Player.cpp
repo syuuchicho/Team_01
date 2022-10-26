@@ -43,7 +43,16 @@ void Player::ResetFlag()
 {
 	shootFlag = 0;
 	changeFlag = 0;
+}
+
+void Player::ResetBullet()
+{
 	sceneFlag = 0;
+	shootFlag = 0;
+	for (std::unique_ptr<PlayerBullet>& bullet : bullets_)
+	{
+		bullet->OnCollision();
+	}
 }
 
 //è’ìÀîªíË
