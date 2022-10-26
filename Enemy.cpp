@@ -126,13 +126,13 @@ void Enemy::UpdateW2(int& left)
 	//移動パターン
 	switch (phase_) {
 	case Phase::Approach://接近
-		Approach(speedY, 15);//画面端
+		Approach(speedY, 15);//15 = 画面端
 		break;
-	case Phase::MoveLeft:
+	case Phase::MoveLeft://左移動
 		MoveLeft(speedX);
 		break;
 	default:
-		MoveRight(speedX);
+		MoveRight(speedX);//右移動
 		break;
 	}
 	//行列の計算

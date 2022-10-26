@@ -43,7 +43,7 @@ public:
 	Vector3 GetWorldPosition();
 
 	//衝突判定
-	void OnCollision();
+	void OnCollision(int& hp);
 
 	void ResetFlag();
 
@@ -72,5 +72,5 @@ private:
 	float kBulletSpeed_Y = 0.1f; //Yスピード
 	float kBulletSpeed_X = 0.3f; //Xスピード
 	//残機
-	int hp = 3;
+	//int hp = 3;
 };

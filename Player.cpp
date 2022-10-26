@@ -46,7 +46,7 @@ void Player::ResetFlag()
 }
 
 //衝突判定
-void Player::OnCollision()
+void Player::OnCollision(int &hp)
 {
 	hp -= 1;
 }
@@ -87,10 +87,7 @@ void Player::Attack()
 	debugText_->SetPos(80, 260);
 	debugText_->Printf(
 		"changeflag(%d)", changeFlag);
-	//デバックテキスト
-	debugText_->SetPos(80, 280);
-	debugText_->Printf(
-		"HP(%d)", hp);
+	
 }
 
 //アップデート

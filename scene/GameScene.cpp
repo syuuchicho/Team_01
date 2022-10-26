@@ -12,16 +12,17 @@ GameScene::~GameScene() {
 	delete model_;
 	delete skydome_;
 	delete player_; //自キャラの解放
-	//delete enemy_;
 }
 
 void GameScene::Initialize() {
+
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 	debugText_ = DebugText::GetInstance();
 	winApp_ = WinApp::GetInstance();
+
 
 	//3Dモデルの生成
 	model_ = Model::Create();
@@ -47,118 +48,175 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 
+	switch (scene)
+	{
+	case 0:		//タイトル
+		if (input_->TriggerKey(DIK_SPACE))
+		{
+			scene = 1;
+		}
+		break;
+	case 1:		//ゲームシーン
+		if (deadEnemyNum == 18 && hp > 0)
+		{
+			scene = 2;		//ゲームクリア
+		}
+		else if (hp <= 0)
+		{
+			scene = 3;		//ゲームオーバー
+		}
+		break;
+	default://ゲームクリアとゲームオーバー
+		if (input_->TriggerKey(DIK_SPACE))
+		{
+			for (std::unique_ptr<Enemy>& enemy : enemies_)
+			{
+				enemy->OnCollision(deadEnemyNum);
+			}
+			time = 70;
+			time2 = -1;
+			time3 = 60;
+			time4 = 60;
+			enemyNum = 0;
+			//死んだ敵の数
+			deadEnemyNum = 0;
+			left = 0;
+			Wave = 1;
+			//残機
+			hp = 3;
+			scene = 1;		//リトライ
+		}
+		break;
+	}
+	if (scene == 1)
+	{
 
-	//自キャラの更新
-	player_->Update();
-	//デスグラフが立った敵を削除
-	enemies_.remove_if([](std::unique_ptr<Enemy>& enemy) {
-		return enemy->IsDead();
-		});
+
+		//自キャラの更新
+		player_->Update();
+		//デスグラフが立った敵を削除
+		enemies_.remove_if([](std::unique_ptr<Enemy>& enemy) {
+			return enemy->IsDead();
+			});
 #pragma region Wave管理
-	if (deadEnemyNum == 3)
-	{
-		Wave = 2;
-	}
-	if (deadEnemyNum == 13)
-	{
-		Wave = 3;
-	}
+		if (deadEnemyNum == 3)
+		{
+			Wave = 2;
+		}
+		if (deadEnemyNum == 13)
+		{
+			Wave = 3;
+		}
 #pragma endregion
 
 #pragma region 敵の生成
-	if (time > 10) {
-		time--;
-	}
-	if (time2 >= 0) {
-		time2--;
-	}
-	if (Wave == 2)
-	{
-		time3--;
-	}
-	/// <summary>
-	/// Wave1
-	/// </summary>
-	if (time % 60 == 0&&Wave==1)
-	{
-		time2 = 120;
-		time = 10;
-		//敵の生成,初期化
-		std::unique_ptr<Enemy>newEnemy = std::make_unique<Enemy>();
-		newEnemy->Initialize(model_, { 0,21,0 });
-		enemyNum = 1;
-		//敵を登録する
-		enemies_.push_back(std::move(newEnemy));
-	}
-
-	if (time2 == 0 &&Wave==1&&enemyNum < 3)
-	{
-		//敵の生成,初期化
-		std::unique_ptr<Enemy>newEnemy = std::make_unique<Enemy>();
-		if (left % 2 == 0)
-		{
-			newEnemy->Initialize(model_, { -10,21,0 });
-			left = 1;
-			time2 = 1;
-			enemyNum += 1;
+		if (time > 10) {
+			time--;
 		}
-		else if (left % 2 == 1)
-		{
-			newEnemy->Initialize(model_, { 10,21,0 });
-			left = 0;
-			time2 = 60;
-			enemyNum += 1;
+		if (time2 >= 0) {
+			time2--;
 		}
-		//敵を登録する
-		enemies_.push_back(std::move(newEnemy));
-	}
-	/// <summary>
-	/// Wave2
-	/// </summary>
-	if (time3 <= 0 && Wave == 2 && enemyNum != 13)
-	{
-		//敵の生成,初期化
-		std::unique_ptr<Enemy>newEnemy = std::make_unique<Enemy>();
-		if (left % 2 == 0)
+		if (Wave == 2)
 		{
-			newEnemy->Initialize(model_, { -10,21,0 });
-			left = 1;
-			time3 = 1;
-			enemyNum += 1;
+			time3--;
 		}
-		else if (left % 2 == 1)
+		if (Wave == 3)
 		{
-			newEnemy->Initialize(model_, { 10,21,0 });
-			left = 0;
-			time3 = 120;
-			enemyNum += 1;
+			time4--;
+		}
+		/// <summary>
+		/// Wave1
+		/// </summary>
+		if (time % 60 == 0 && Wave == 1)
+		{
+			time2 = 120;
+			time = 10;
+			//敵の生成,初期化
+			std::unique_ptr<Enemy>newEnemy = std::make_unique<Enemy>();
+			newEnemy->Initialize(model_, { 0,21,0 });
+			enemyNum = 1;
+			//敵を登録する
+			enemies_.push_back(std::move(newEnemy));
 		}
 
-		//敵を登録する
-		enemies_.push_back(std::move(newEnemy));
-	}
+		if (time2 == 0 && Wave == 1 && enemyNum < 3)
+		{
+			//敵の生成,初期化
+			std::unique_ptr<Enemy>newEnemy = std::make_unique<Enemy>();
+			if (left % 2 == 0)
+			{
+				newEnemy->Initialize(model_, { -10,21,0 });
+				left = 1;
+				time2 = 1;
+				enemyNum += 1;
+			}
+			else if (left % 2 == 1)
+			{
+				newEnemy->Initialize(model_, { 10,21,0 });
+				left = 0;
+				time2 = 60;
+				enemyNum += 1;
+			}
+			//敵を登録する
+			enemies_.push_back(std::move(newEnemy));
+		}
+		/// <summary>
+		/// Wave2
+		/// </summary>
+		if (time3 <= 0 && Wave == 2 && enemyNum != 13)
+		{
+			//敵の生成,初期化
+			std::unique_ptr<Enemy>newEnemy = std::make_unique<Enemy>();
+			if (left % 2 == 0)
+			{
+				newEnemy->Initialize(model_, { -10,21,0 });
+				left = 1;
+				time3 = 1;
+				enemyNum += 1;
+			}
+			else if (left % 2 == 1)
+			{
+				newEnemy->Initialize(model_, { 10,21,0 });
+				left = 0;
+				time3 = 120;
+				enemyNum += 1;
+			}
 
+			//敵を登録する
+			enemies_.push_back(std::move(newEnemy));
+		}
+
+		if (time4 <= 0 && Wave == 3 && enemyNum != 18)
+		{
+			//敵の生成,初期化
+			std::unique_ptr<Enemy>newEnemy = std::make_unique<Enemy>();
+			newEnemy->Initialize(model_, { 0,21,0 });
+			time4 = 60;
+			enemyNum += 1;
+
+			//敵を登録する
+			enemies_.push_back(std::move(newEnemy));
+		}
 #pragma endregion
 
 
-	//敵の更新
-	for (std::unique_ptr<Enemy>& enemy : enemies_)
-	{
-		switch (Wave) {
-		case 1:
-			enemy->UpdateW1();
-			break;
-		case 2:
-			enemy->UpdateW2(left);
-			break;
-		case 3:
-			enemy->UpdateW1();
-			break;
+		//敵の更新
+		for (std::unique_ptr<Enemy>& enemy : enemies_)
+		{
+			switch (Wave) {
+			case 1:
+				enemy->UpdateW1();
+				break;
+			case 2:
+				enemy->UpdateW2(left);
+				break;
+			case 3:
+				enemy->UpdateW1();
+				break;
+			}
 		}
+		CheakAllCollisions();
 	}
-
-	CheakAllCollisions();
-
 }
 
 void GameScene::CheakAllCollisions()
@@ -210,7 +268,7 @@ void GameScene::CheakAllCollisions()
 		if (posA.y < posC.y + 7)
 		{
 			enemy->OnCollision(deadEnemyNum);
-			player_->OnCollision();
+			player_->OnCollision(hp);
 		}
 	}
 }
@@ -219,63 +277,76 @@ void GameScene::Draw() {
 
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
+	if (scene == 1)
+	{
+
 
 #pragma region 背景スプライト描画
-	// 背景スプライト描画前処理
-	Sprite::PreDraw(commandList);
+		// 背景スプライト描画前処理
+		Sprite::PreDraw(commandList);
 
-	/// <summary>
-	/// ここに背景スプライトの描画処理を追加できる
-	/// </summary>
+		/// <summary>
+		/// ここに背景スプライトの描画処理を追加できる
+		/// </summary>
 
-	// スプライト描画後処理
-	Sprite::PostDraw();
-	// 深度バッファクリア
-	dxCommon_->ClearDepthBuffer();
+		// スプライト描画後処理
+		Sprite::PostDraw();
+		// 深度バッファクリア
+		dxCommon_->ClearDepthBuffer();
 #pragma endregion
 
 #pragma region 3Dオブジェクト描画
-	// 3Dオブジェクト描画前処理
-	Model::PreDraw(commandList);
+		// 3Dオブジェクト描画前処理
+		Model::PreDraw(commandList);
 
-	/// <summary>
-	/// ここに3Dオブジェクトの描画処理を追加できる
-	/// </summary>
-	//天球の描画
-	skydome_->Draw();
+		/// <summary>
+		/// ここに3Dオブジェクトの描画処理を追加できる
+		/// </summary>
+		//天球の描画
+		skydome_->Draw();
 
-	//自キャラの描画
-	player_->Draw(viewProjection_);
+		//自キャラの描画
+		player_->Draw(viewProjection_);
 
-	//敵の描画
-	for (std::unique_ptr<Enemy>& enemy : enemies_)
-	{
-		enemy->Draw(viewProjection_);
-	}
+		//敵の描画
+		for (std::unique_ptr<Enemy>& enemy : enemies_)
+		{
+			enemy->Draw(viewProjection_);
+		}
 
-	// 3Dオブジェクト描画後処理
-	Model::PostDraw();
+		// 3Dオブジェクト描画後処理
+		Model::PostDraw();
 #pragma endregion
 
 #pragma region 前景スプライト描画
-	// 前景スプライト描画前処理
-	Sprite::PreDraw(commandList);
+		// 前景スプライト描画前処理
+		Sprite::PreDraw(commandList);
 
-	/// <summary>
-	/// ここに前景スプライトの描画処理を追加できる
-	/// </summary>
+		/// <summary>
+		/// ここに前景スプライトの描画処理を追加できる
+		/// </summary>
 
-	// デバッグテキストの描画
-	debugText_->DrawAll(commandList);
-	//デバックテキスト
-	debugText_->SetPos(80, 240);
-	debugText_->Printf(
-		"timer(%d)", time);
-	debugText_->SetPos(80, 300);
-	debugText_->Printf(
-		"Wave(%d)", Wave);
-	// スプライト描画後処理
-	Sprite::PostDraw();
+		// デバッグテキストの描画
+		debugText_->DrawAll(commandList);
+		//デバックテキスト
+		debugText_->SetPos(80, 240);
+		debugText_->Printf(
+			"timer(%d)", time);
+		//デバックテキスト
+		debugText_->SetPos(80, 280);
+		debugText_->Printf(
+			"HP(%d)", hp);
+		// デバックテキスト
+		debugText_->SetPos(80, 300);
+		debugText_->Printf(
+			"Wave(%d)", Wave);
+		// デバックテキスト
+		debugText_->SetPos(80, 320);
+		debugText_->Printf(
+			"scene(%d)", scene);
 
+		// スプライト描画後処理
+		Sprite::PostDraw();
+	}
 #pragma endregion
 }
