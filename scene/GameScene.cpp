@@ -116,7 +116,7 @@ void GameScene::Update() {
 	{
 
 		//自キャラの更新 
-		player_->Update(scene);
+		player_->Update();
 		//デスグラフが立った敵を削除
 		enemies_.remove_if([](std::unique_ptr<Enemy>& enemy) {
 			return enemy->IsDead();
