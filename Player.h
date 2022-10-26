@@ -73,4 +73,5 @@ private:
 	float kBulletSpeed_X = 0.3f; //Xスピード
 	//残機
 	//int hp = 3;
+	int sceneFlag = 0;
 };

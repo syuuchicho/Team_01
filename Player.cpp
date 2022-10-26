@@ -43,10 +43,11 @@ void Player::ResetFlag()
 {
 	shootFlag = 0;
 	changeFlag = 0;
+	sceneFlag = 0;
 }
 
 //衝突判定
-void Player::OnCollision(int &hp)
+void Player::OnCollision(int& hp)
 {
 	hp -= 1;
 }
@@ -55,7 +56,7 @@ void Player::OnCollision(int &hp)
 void Player::Attack()
 {
 	//スペースを押したら撃つ
-	if (input_->TriggerKey(DIK_SPACE))
+	if (input_->TriggerKey(DIK_SPACE)&&sceneFlag==1)
 	{
 		//弾の軌道
 		if (changeFlag == 0)
@@ -78,7 +79,7 @@ void Player::Attack()
 		}
 	}
 
-	
+
 	//デバックテキスト
 	debugText_->SetPos(80, 200);
 	debugText_->Printf(
@@ -87,7 +88,7 @@ void Player::Attack()
 	debugText_->SetPos(80, 260);
 	debugText_->Printf(
 		"changeflag(%d)", changeFlag);
-	
+
 }
 
 //アップデート
@@ -116,9 +117,8 @@ void Player::Update()
 	worldTransform_.matWorld_ = playerMatworld->CreateMatWorld(worldTransform_);
 	//行列の転送
 	worldTransform_.TransferMatrix();
-
-	Attack();
-
+		Attack();
+		sceneFlag = 1;
 	// 弾更新
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets_)
 	{

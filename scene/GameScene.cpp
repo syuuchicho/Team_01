@@ -66,7 +66,7 @@ void GameScene::Update() {
 			scene = 3;		//ゲームオーバー
 		}
 		break;
-	default://ゲームクリアとゲームオーバー
+	case 2:		//ゲームクリア
 		if (input_->TriggerKey(DIK_SPACE))
 		{
 			for (std::unique_ptr<Enemy>& enemy : enemies_)
@@ -85,15 +85,38 @@ void GameScene::Update() {
 			//残機
 			hp = 3;
 			scene = 1;		//リトライ
+			player_->ResetFlag();
+
+			scene = 0;		//タイトル
+		}
+	default://ゲームオーバー
+		if (input_->TriggerKey(DIK_SPACE))
+		{
+			for (std::unique_ptr<Enemy>& enemy : enemies_)
+			{
+				enemy->OnCollision(deadEnemyNum);
+			}
+			time = 70;
+			time2 = -1;
+			time3 = 60;
+			time4 = 60;
+			enemyNum = 0;
+			//死んだ敵の数
+			deadEnemyNum = 0;
+			left = 0;
+			Wave = 1;
+			//残機
+			hp = 3;
+			scene = 1;		//リトライ
+			player_->ResetFlag();
 		}
 		break;
 	}
 	if (scene == 1)
 	{
 
-
-		//自キャラの更新
-		player_->Update();
+		//自キャラの更新 
+		player_->Update(scene);
 		//デスグラフが立った敵を削除
 		enemies_.remove_if([](std::unique_ptr<Enemy>& enemy) {
 			return enemy->IsDead();
